@@ -21,6 +21,8 @@ const AppointmentSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true,
+    toJSON: true,
+    toObject: true
 })
 
 export const Appointment = mongoose.model('Appointment', AppointmentSchema)

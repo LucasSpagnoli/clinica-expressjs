@@ -22,11 +22,11 @@ const UserSchema = new mongoose.Schema({
         specialty: {
             type: String,
         },
-        availability: [{
+        availability: {
             week_days: String,
             start_time: String,
             end_time: String
-        }]
+        }
     },
 }, {
     timestamps: true,
