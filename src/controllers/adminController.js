@@ -1,5 +1,6 @@
 import { User } from "../db/schemas/user-schema.js"
 import { matchedData } from 'express-validator'
+
 // const getDoctors = async (req, res) => {
 
 // }
@@ -7,7 +8,7 @@ import { matchedData } from 'express-validator'
 const createDoctor = async (req, res) => {
     const data = matchedData(req)
     const doctorData = {
-        ...body,
+        ...data,
         role: 'doctor'
     }
     const newDoc = await User.create(doctorData)
