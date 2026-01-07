@@ -8,12 +8,12 @@ export const userSchema = {
             options: { min: 5 },
             errorMessage: 'Name must have more than 5 characters'
         },
-        isAlpha: {
-            options: ['pt-BR'],
-            errorMessage: 'Name must contain only letters'
-        },
+        matches: {
+            options: /^[a-zA-Z\u00C0-\u00FF ]+$/i, // letras, acentos e espaços
+            errorMessage: 'Name must contain only letters and spaces'
+        }
     },
-        email: {
+    email: {
         isEmail: {
             errorMessage: 'Invalid email address'
         },

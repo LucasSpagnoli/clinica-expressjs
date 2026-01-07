@@ -6,7 +6,7 @@ import { handleValidation } from '../middleware/handleValidation.js'
 
 const adminRoutes = new Router()
 
-// adminRoutes.get('./admin/doctors', )
+adminRoutes.get('/admin/doctors', adminController.getDoctors)
 adminRoutes.post('/admin/create', checkSchema(userSchema), handleValidation, adminController.createDoctor)
 // routes.put('./admin/update', checkSchema(userSchema), handleValidation, updateDoctor)
 // routes.delete('./admin/delete', deleteDoctor)
