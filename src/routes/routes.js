@@ -4,7 +4,7 @@ import loginRoutes from './login.js'
 
 const routes = new Router()
 
-routes.use(adminRoutes)
+routes.use('/admin', adminRoutes)
 routes.use(loginRoutes)
 
 export default routes

@@ -3,12 +3,16 @@ import adminController from '../controllers/adminController.js'
 import { checkSchema } from 'express-validator'
 import userSchema from '../middleware/validatorsSchemas/userSchema.js'
 import { handleValidation } from '../middleware/handleValidation.js'
+import authValidation from '../middleware/authValidation.js'
 
 const adminRoutes = new Router()
 
-adminRoutes.get('/admin/doctors', /* tokenAuth, isAdmin, */ adminController.getDoctors)
-adminRoutes.post('/admin/create', /* tokenAuth, isAdmin, */ checkSchema(userSchema.createUserSchema), handleValidation, adminController.createDoctor)
-adminRoutes.put('/admin/update/:id', /* tokenAuth, isAdmin, */ checkSchema(userSchema.updateUserSchema), handleValidation, adminController.updateDoctor)
-adminRoutes.delete('/admin/delete/:id', /* tokenAuth, isAdmin, */ adminController.deleteDoctor)
+adminRoutes.use(authValidation.authToken)
+adminRoutes.use(authValidation.isAdmin)
+
+adminRoutes.get('/doctors', adminController.getDoctors)
+adminRoutes.delete('/delete/:id', adminController.deleteDoctor)
+adminRoutes.post('/create', checkSchema(userSchema.createUserSchema), handleValidation, adminController.createDoctor)
+adminRoutes.put('/update/:id', checkSchema(userSchema.updateUserSchema), handleValidation, adminController.updateDoctor)
 
 export default adminRoutes
