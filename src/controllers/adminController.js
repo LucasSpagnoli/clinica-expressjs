@@ -2,9 +2,12 @@ import { User } from "../db/schemas/user-schema.js"
 import { matchedData } from 'express-validator'
 
 const getDoctors = async (req, res) => {
-    const doctors = await User.find({ role: 'doctor' }).select('-password -createdAt -updatedAt -__v')
-    if (doctors.length === 0) return res.status(200).send('No doctors found')
-    return res.json(doctors)
+    try {
+        const doctors = await User.find({ role: 'doctor' }).select('-password -createdAt -updatedAt -__v')
+        return res.json(doctors)
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
 }
 
 const createDoctor = async (req, res) => {
@@ -15,9 +18,10 @@ const createDoctor = async (req, res) => {
             role: 'doctor'
         }
         const newDoc = await User.create(doctorData)
-        return res.status(201).send('Doctor created with success')
+        console.log('Doctor created successfully')
+        return res.status(201).json(newDoc)
     } catch (err) {
-        return res.status(400).send(err.message)
+        res.status(500).json({ error: err.message })
     }
 }
 
@@ -28,13 +32,16 @@ const updateDoctor = async (req, res) => {
         const updDoctor = await User.findByIdAndUpdate(id, data, {
             new: true,
             runValidators: true
-        })
+        }).select('-password')
+
         if (!updDoctor) {
             return res.status(404).json({ error: "Dctor not found" });
         }
-        return res.status(201).send(`Dr. ${updDoctor.name} updated with success`)
+
+        console.log(`Dr. ${updDoctor.name} updated successfully`)
+        return res.status(200).json(updDoctor)
     } catch (err) {
-        return res.status(400).send(err.message)
+        res.status(500).json({ error: err.message })
     }
 }
 
@@ -42,10 +49,10 @@ const deleteDoctor = async (req, res) => {
     try {
         const id = req.params.id
         const delDoctor = await User.findByIdAndDelete(id)
-        if (!delDoctor) res.status(400).send('Doctor not found')
-        return res.status(200).send('Doctor deleted with success')
+        if (!delDoctor) return res.status(404).json({ error: 'Doctor not found' })
+        return res.status(200).json({ msg: 'Doctor deleted successfully' })
     } catch (err) {
-        res.status(400).send(err.message)
+        res.status(500).json({ error: err.message })
     }
 }
 
