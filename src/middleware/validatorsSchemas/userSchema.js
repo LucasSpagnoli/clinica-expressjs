@@ -83,7 +83,9 @@ const updateUserSchema = {
             options: async (value, { req }) => {
                 const id = req.params.id
                 const user = await User.findOne({ email: value })
-                if (user._id.toString() !== id) throw new Error('Email already in use')
+                if (user) {
+                    if (user._id.toString() !== id) throw new Error('Email already in use')
+                }
             }
         }
     },

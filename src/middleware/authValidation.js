@@ -6,7 +6,7 @@ dotenv.config()
 const authToken = (req, res, next) => {
     try {
         const header = req.headers
-        if (!header) return res.status(401).json({ msg: 'Invalid token, login again' })
+        if (!header['authorization']) return res.status(401).json({ msg: 'Invalid token, login again' })
         const token = header['authorization'].split(' ')[1]
         if (!token) return res.status(401).send({ msg: 'Invalid token, login again' })
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)

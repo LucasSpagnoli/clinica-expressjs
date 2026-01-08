@@ -1,6 +1,5 @@
 import { User } from "../db/schemas/user-schema.js"
 import { matchedData } from 'express-validator'
-import bcrypt from 'bcrypt'
 
 const getDoctors = async (req, res) => {
     try {
