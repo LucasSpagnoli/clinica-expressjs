@@ -1,3 +1,5 @@
+import { User } from "../../db/schemas/user-schema.js"
+
 const createUserSchema = {
     name: {
         trim: true,
@@ -17,7 +19,13 @@ const createUserSchema = {
         isEmail: {
             errorMessage: 'Invalid email address'
         },
-        normalizeEmail: true
+        normalizeEmail: true,
+        custom: {
+            options: async (value) => {
+                const user = await User.findOne({ email: value })
+                if (user) throw new Error('Email already in use')
+            }
+        }
     },
     password: {
         isLength: {
@@ -67,13 +75,19 @@ const updateUserSchema = {
     email: {
         optional: true,
         isEmail: true,
-        normalizeEmail: true
+        normalizeEmail: true,
+        custom: {
+            options: async (value, { req }) => {
+                const id = req.params.id
+                const user = await User.findOne({ email: value })
+                if (user._id.toString() !== id) throw new Error('Email already in use')
+            }
+        }
     },
     password: {
         optional: true,
         isLength: { options: { min: 8 } }
     },
-
     "doctor_info.specialty": {
         optional: true,
         isString: true,

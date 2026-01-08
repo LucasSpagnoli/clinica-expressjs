@@ -3,38 +3,15 @@ import mongoose from 'mongoose'
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
-        matches: {
-            options: /^[a-zA-Z\u00C0-\u00FF ]+$/i,
-            errorMessage: 'Name must contain only letters and spaces'
-        },
-        isLength: {
-            options: { min: 5 },
-            errorMessage: 'Name must have at least 5 characters'
-        },
-        notEmpty: {
-            errorMessage: 'Name cannot be empty'
-        },
+        required: true
     },
     email: {
         type: String,
-        required: true,
-        isEmail: { errorMessage: 'Invalid email' },
-        normalizeEmail: true,
-        custom: {
-            options: async (email) => {
-                const user = await User.findOne({ email: email })
-                if (user) throw new Error('Email already in use')
-            }
-        }
+        required: true
     },
     password: {
         type: String,
-        required: true,
-        isLength: {
-            options: { min: 8 },
-            errorMessage: 'Password must be at least 8 characters'
-        }
+        required: true
     },
     role: {
         type: String,
