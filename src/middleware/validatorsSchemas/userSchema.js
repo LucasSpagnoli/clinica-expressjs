@@ -31,6 +31,9 @@ const createUserSchema = {
         isLength: {
             options: { min: 8 },
             errorMessage: 'Password must be at least 8 characters'
+        },
+        notEmpty: {
+            errorMessage: "Senha é obrigatória"
         }
     },
 
