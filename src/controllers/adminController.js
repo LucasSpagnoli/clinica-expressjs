@@ -13,10 +13,7 @@ const getDoctors = async (req, res) => {
 
 const createDoctor = async (req, res) => {
     try {
-        const salt = await bcrypt.genSalt(10)
         const data = matchedData(req)
-        console.log(data.password)
-        // const hashedPassword = await bcrypt.hash(data.password, salt)
         const doctorData = {
             ...data,
             role: 'doctor'

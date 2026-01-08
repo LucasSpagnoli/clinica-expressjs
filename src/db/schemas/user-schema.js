@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -7,7 +8,8 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -22,11 +24,12 @@ const UserSchema = new mongoose.Schema({
         specialty: {
             type: String,
         },
-        availability: {
-            week_days: String,
+        availability: [{
+            week_day: String,
             start_time: String,
-            end_time: String
-        }
+            end_time: String,
+            _id: false
+        }]
     },
 }, {
     timestamps: true,
@@ -37,5 +40,11 @@ UserSchema.virtual('appointments', {
     localField: '_id',
     foreignField: 'doctor_id'
 });
+
+UserSchema.pre('save', async function() {
+    if (!this.isModified('password')) return
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
+})
 
 export const User = mongoose.model('User', UserSchema)
