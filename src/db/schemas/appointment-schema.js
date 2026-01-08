@@ -8,7 +8,7 @@ const AppointmentSchema = new mongoose.Schema({
     },
     patient_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Também aponta para o Model User
+        ref: 'User',
         required: true
     },
     date: {

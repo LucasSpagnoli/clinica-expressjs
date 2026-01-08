@@ -15,7 +15,7 @@ const createDoctor = async (req, res) => {
             role: 'doctor'
         }
         const newDoc = await User.create(doctorData)
-        return res.status(201).send('Doutor criado com sucesso')
+        return res.status(201).send('Doctor created with success')
     } catch (err) {
         return res.status(400).send(err.message)
     }
@@ -30,12 +30,23 @@ const updateDoctor = async (req, res) => {
             runValidators: true
         })
         if (!updDoctor) {
-            return res.status(404).json({ error: "Médico não encontrado" });
+            return res.status(404).json({ error: "Dctor not found" });
         }
-        return res.status(201).send(`Doutor ${updDoctor.name} atualizado com sucesso`)
+        return res.status(201).send(`Dr. ${updDoctor.name} updated with success`)
     } catch (err) {
         return res.status(400).send(err.message)
     }
 }
 
-export default { createDoctor, getDoctors, updateDoctor }
+const deleteDoctor = async (req, res) => {
+    try {
+        const id = req.params.id
+        const delDoctor = await User.findByIdAndDelete(id)
+        if (!delDoctor) res.status(400).send('Doctor not found')
+        return res.status(200).send('Doctor deleted with success')
+    } catch (err) {
+        res.status(400).send(err.message)
+    }
+}
+
+export default { createDoctor, getDoctors, updateDoctor, deleteDoctor }

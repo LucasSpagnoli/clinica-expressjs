@@ -9,6 +9,6 @@ const adminRoutes = new Router()
 adminRoutes.get('/admin/doctors', adminController.getDoctors)
 adminRoutes.post('/admin/create', checkSchema(userSchema.createUserSchema), handleValidation, adminController.createDoctor)
 adminRoutes.put('/admin/update/:id', checkSchema(userSchema.updateUserSchema), handleValidation, adminController.updateDoctor)
-// routes.delete('./admin/delete', deleteDoctor)
+adminRoutes.delete('/admin/delete/:id', adminController.deleteDoctor)
 
 export default adminRoutes
