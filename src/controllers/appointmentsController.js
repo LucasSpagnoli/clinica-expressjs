@@ -5,18 +5,27 @@ import { User } from "../db/schemas/user-schema.js"
 const createAppointment = async (req, res) => {
     try {
         const data = matchedData(req)
-        const endTime = new Date(data.date.getTime() + 1 * 60 * 60 * 1000)
         const startTime = new Date(data.date)
+        const endTime = new Date(startTime.getTime() + 1 * 60 * 60 * 1000)
         const doctor = await User.findById(data.doctor_id)
-        
+
+        const isBusy = await Appointment.findOne({
+            doctor_id: data.doctor_id,
+            "date.start_time": startTime
+        })
+        if (isBusy) return res.status(409).json({ error: "Doctor already has an appointment at this time" })
+
         const appointmentData = {
-            ...data,
-            start_time: startTime,
-            end_time: endTime,
+            doctor_id: data.doctor_id,
             patient_id: req.user.id,
+            date: {
+                start_time: startTime,
+                end_time: endTime
+            }
         }
-        
+
         let newAppData = await Appointment.create(appointmentData)
+
         newAppData = { date: newAppData.toObject().date, id: newAppData.toObject()._id }
         const newApp = {
             ...newAppData,
@@ -36,12 +45,13 @@ const deleteAppointment = async (req, res) => {
 
         const app = await Appointment.findById(id)
         if (!app) return res.status(404).json({ error: 'Appointment not found' })
+
         if (app.patient_id.toString() !== req.user.id) {
             return res.status(403).json({ error: 'Not authorized to delete this appointment' })
         }
 
         const agora = new Date()
-        const dataConsulta = new Date(app.date)
+        const dataConsulta = new Date(app.date.start_time)
         const agora24h = new Date(agora.getTime() + 24 * 60 * 60 * 1000);
         if (dataConsulta <= agora24h) {
             return res.status(400).json({ error: "The appointment must be cancelled more than 24 hours in advance." });
