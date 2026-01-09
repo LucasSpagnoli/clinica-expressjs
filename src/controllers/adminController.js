@@ -21,7 +21,7 @@ const createDoctor = async (req, res) => {
         console.log('Doctor created successfully')
         return res.status(201).json(newDoc)
     } catch (err) {
-        res.status(500).json({ error: err.message })
+        return res.status(500).json({ error: err.message })
     }
 }
 
@@ -41,7 +41,7 @@ const updateDoctor = async (req, res) => {
         console.log(`Dr. ${updDoctor.name} updated successfully`)
         return res.status(200).json(updDoctor)
     } catch (err) {
-        res.status(500).json({ error: err.message })
+        return res.status(500).json({ error: err.message })
     }
 }
 
@@ -52,7 +52,7 @@ const deleteDoctor = async (req, res) => {
         if (!delDoctor) return res.status(404).json({ error: 'Doctor not found' })
         return res.status(200).json({ msg: 'Doctor deleted successfully' })
     } catch (err) {
-        res.status(500).json({ error: err.message })
+        return res.status(500).json({ error: err.message })
     }
 }
 

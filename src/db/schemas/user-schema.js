@@ -36,15 +36,23 @@ const UserSchema = new mongoose.Schema({
     },
 }, {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 })
 
-UserSchema.virtual('appointments', {
+UserSchema.virtual('doctor_appointments', {
     ref: 'Appointment',
     localField: '_id',
     foreignField: 'doctor_id'
 });
 
-UserSchema.pre('save', async function() {
+UserSchema.virtual('patient_appointments', {
+    ref: 'Appointment',
+    localField: '_id',
+    foreignField: 'patient_id'
+});
+
+UserSchema.pre('save', async function () {
     if (!this.isModified('password')) return
     const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password, salt)

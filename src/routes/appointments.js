@@ -1,7 +1,16 @@
 import { Router } from 'express'
+import appointmentsController from '../controllers/appointmentsController.js'
+import { checkSchema } from 'express-validator'
+import appointmentSchema from '../db/validatorsSchemas/appointmentSchema.js'
+import { handleValidation } from '../middleware/handleValidation.js'
+import authValidation from '../middleware/authValidation.js'
 
-const routes = new Router()
+const appointmentRoutes = new Router()
 
-routes.get('./appointments', getAppointments)
-routes.post('./appointments/create', createAppointment)
-routes.post('./appointments/cancel', cancelAppointment)
+appointmentRoutes.use(authValidation.authToken)
+
+appointmentRoutes.get('/appointments', appointmentsController.getAppointments)
+appointmentRoutes.delete('/delete/:id', appointmentsController.deleteAppointment)
+appointmentRoutes.post('/create', checkSchema(appointmentSchema.createAppointmentSchema), handleValidation, appointmentsController.createAppointment)
+
+export default appointmentRoutes

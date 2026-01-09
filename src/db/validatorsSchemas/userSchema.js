@@ -1,4 +1,4 @@
-import { User } from "../../db/schemas/user-schema.js"
+import { User } from "../schemas/user-schema.js"
 
 const createUserSchema = {
     name: {

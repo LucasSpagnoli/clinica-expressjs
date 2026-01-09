@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import adminController from '../controllers/adminController.js'
 import { checkSchema } from 'express-validator'
-import userSchema from '../middleware/validatorsSchemas/userSchema.js'
+import userSchema from '../db/validatorsSchemas/userSchema.js'
 import { handleValidation } from '../middleware/handleValidation.js'
 import authValidation from '../middleware/authValidation.js'
 
