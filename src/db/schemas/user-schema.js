@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema({
             type: String,
         },
         availability: [{
-            week_day: String,
+            week_day: Number, // 0 pra domingo, 1 pra segunda e assim por diante (pra facilitar validação de agendamento)
             start_time: String,
             end_time: String,
             _id: false

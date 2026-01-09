@@ -7,13 +7,28 @@ const createAppointment = async (req, res) => {
         const data = matchedData(req)
         const startTime = new Date(data.date)
         const endTime = new Date(startTime.getTime() + 1 * 60 * 60 * 1000)
-        const doctor = await User.findById(data.doctor_id)
 
-        const isBusy = await Appointment.findOne({
+        const doctor = await User.findById(data.doctor_id)
+        if (doctor.role !== 'doctor') return res.status(400).send({ error: 'Appoint with a doctor' })
+        const diaSemana = startTime.getUTCDay();
+        const horaMinuto = startTime.getUTCHours().toString().padStart(2, '0') + ":" + startTime.getUTCMinutes().toString().padStart(2, '0');
+
+        const isAvailable = doctor.doctor_info.availability.find(a =>
+            a.week_day === diaSemana &&
+            horaMinuto >= a.start_time &&
+            horaMinuto < a.end_time
+        );
+        if (!isAvailable) {
+            return res.status(400).json({ error: "Doctor does not work at this time/day" });
+        }
+
+        const conflict = await Appointment.findOne({
             doctor_id: data.doctor_id,
             "date.start_time": startTime
-        })
-        if (isBusy) return res.status(409).json({ error: "Doctor already has an appointment at this time" })
+        });
+        if (conflict) {
+            return res.status(409).json({ error: "Time slot already taken" });
+        }
 
         const appointmentData = {
             doctor_id: data.doctor_id,

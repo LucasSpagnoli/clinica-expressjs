@@ -13,13 +13,14 @@ const AppointmentSchema = new mongoose.Schema({
     },
     date: {
         start_time: {
-            type: Date,
-            required: true
+            type: String,
+            match: /^([01]\d|2[0-3]):([0-5]\d)$/
         },
         end_time: {
-            type: Date,
-            required: true
-        }
+            type: String,
+            match: /^([01]\d|2[0-3]):([0-5]\d)$/
+        },
+        _id: false
     },
     status: {
         type: String,

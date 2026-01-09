@@ -1,4 +1,4 @@
-import mongoose, { connect, mongo } from "mongoose";
+import mongoose from "mongoose";
 import dotenv from 'dotenv'
 import { User } from "./src/db/schemas/user-schema.js";
 

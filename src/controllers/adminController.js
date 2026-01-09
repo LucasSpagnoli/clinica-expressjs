@@ -4,7 +4,7 @@ import { matchedData } from 'express-validator'
 const getDoctors = async (req, res) => {
     try {
         const doctors = await User.find({ role: 'doctor' }).select('-password -createdAt -updatedAt -__v')
-        return res.json(doctors)
+        return res.status(200).json(doctors)
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
