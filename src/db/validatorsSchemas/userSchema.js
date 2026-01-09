@@ -46,10 +46,8 @@ const createUserSchema = {
     "doctor_info.availability": {
         optional: true,
     },
-    "doctor_info.availability.*.week_days": {
+    "doctor_info.availability.*.week_day": {
         optional: true,
-        isString: true,
-        notEmpty: { errorMessage: "Week days required" }
     },
     "doctor_info.availability.*.start_time": {
         optional: true,

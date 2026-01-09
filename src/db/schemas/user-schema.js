@@ -24,13 +24,19 @@ const UserSchema = new mongoose.Schema({
         default: 'patient'
     },
     doctor_info: {
-        specialty: {
-            type: String,
-        },
+        specialty: { type: String },
         availability: [{
-            week_day: Number, // 0 pra domingo, 1 pra segunda e assim por diante (pra facilitar validação de agendamento)
-            start_time: String,
-            end_time: String,
+            week_day: { type: Number, min: 0, max: 6 },
+            start_time: {
+                type: String,
+                required: true,
+                match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'Please use HH:mm format (e.g. 07:00)']
+            },
+            end_time: {
+                type: String,
+                required: true,
+                match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'Please use HH:mm format (e.g. 17:00)']
+            },
             _id: false
         }]
     },

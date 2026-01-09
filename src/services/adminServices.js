@@ -1,12 +1,5 @@
-import { User } from "../db/schemas/user-schema"
-
-class ServiceError extends Error {
-    constructor(message, status) {
-        super(message);
-        this.status = status;
-        this.name = this.constructor.name;
-    }
-}
+import { User } from "../db/schemas/user-schema.js"
+import ServiceError from "./ServiceError.js"
 
 class AdminServices {
 

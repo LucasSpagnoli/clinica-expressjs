@@ -1,4 +1,3 @@
-import { User } from "../db/schemas/user-schema.js"
 import { matchedData } from 'express-validator'
 import AdminServices from "../services/adminServices.js"
 

@@ -1,101 +1,37 @@
 import { matchedData } from "express-validator"
-import { Appointment } from "../db/schemas/appointment-schema.js"
-import { User } from "../db/schemas/user-schema.js"
+import AppointmentsServices from "../services/appointmentsServices.js"
+
 
 const createAppointment = async (req, res) => {
     try {
         const data = matchedData(req)
-        const startTime = new Date(data.date)
-        const endTime = new Date(startTime.getTime() + 1 * 60 * 60 * 1000)
-
-        const doctor = await User.findById(data.doctor_id)
-        if (doctor.role !== 'doctor') return res.status(400).send({ error: 'Appoint with a doctor' })
-        const diaSemana = startTime.getUTCDay();
-        const horaMinuto = startTime.getUTCHours().toString().padStart(2, '0') + ":" + startTime.getUTCMinutes().toString().padStart(2, '0');
-
-        const isAvailable = doctor.doctor_info.availability.find(a =>
-            a.week_day === diaSemana &&
-            horaMinuto >= a.start_time &&
-            horaMinuto < a.end_time
-        );
-        if (!isAvailable) {
-            return res.status(400).json({ error: "Doctor does not work at this time/day" });
-        }
-
-        const conflict = await Appointment.findOne({
-            doctor_id: data.doctor_id,
-            "date.start_time": startTime
-        });
-        if (conflict) {
-            return res.status(409).json({ error: "Time slot already taken" });
-        }
-
-        const appointmentData = {
-            doctor_id: data.doctor_id,
-            patient_id: req.user.id,
-            date: {
-                start_time: startTime,
-                end_time: endTime
-            }
-        }
-
-        let newAppData = await Appointment.create(appointmentData)
-
-        newAppData = { date: newAppData.toObject().date, id: newAppData.toObject()._id }
-        const newApp = {
-            ...newAppData,
-            doctor: doctor.name
-        }
-
-        console.log('Appointment created successfully')
+        const patientId = req.user.id
+        const newApp = await AppointmentsServices.createAppointment(data, patientId)
         return res.status(201).json(newApp)
     } catch (err) {
-        return res.status(500).json({ error: err.message })
+        return res.status(err.status || 500).json({ error: err.message })
     }
 }
 
 const deleteAppointment = async (req, res) => {
     try {
         const id = req.params.id
-
-        const app = await Appointment.findById(id)
-        if (!app) return res.status(404).json({ error: 'Appointment not found' })
-
-        if (app.patient_id.toString() !== req.user.id) {
-            return res.status(403).json({ error: 'Not authorized to delete this appointment' })
-        }
-
-        const agora = new Date()
-        const dataConsulta = new Date(app.date.start_time)
-        const agora24h = new Date(agora.getTime() + 24 * 60 * 60 * 1000);
-        if (dataConsulta <= agora24h) {
-            return res.status(400).json({ error: "The appointment must be cancelled more than 24 hours in advance." });
-        }
-
-        await Appointment.findByIdAndDelete(id)
+        const patientId = req.user.id
+        await AppointmentsServices.deleteAppointment(id, patientId)
         return res.status(200).json({ msg: 'Appointment deleted successfully' })
     } catch (err) {
-        return res.status(500).json({ error: err.message })
+        return res.status(err.status || 500).json({ error: err.message })
     }
 }
-
-// const getDocAppointments
 
 const getAppointments = async (req, res) => {
     try {
         const id = req.user.id
         const role = req.user.role
-        let myAppointments = { appointments: [] }
-        if (role === 'patient') {
-            myAppointments = await Appointment.find({ patient_id: id }).populate('doctor_id', 'name doctor_info.specialty')
-        } else if (role === 'doctor') {
-            myAppointments = await Appointment.find({ doctor_id: id }).populate('patient_id', 'name')
-        } else {
-            myAppointments = await Appointment.find().select('-patient_id -doctor_id')
-        }
+        const myAppointments = await AppointmentsServices.getAppointments(id, role)
         return res.status(200).json(myAppointments)
     } catch (err) {
-        return res.status(500).json({ error: err.message })
+        return res.status(err.status || 500).json({ error: err.message })
     }
 }
 
