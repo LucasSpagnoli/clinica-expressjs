@@ -1,35 +1,33 @@
 import { User } from "../db/schemas/user-schema.js"
 import { Appointment } from "../db/schemas/appointment-schema.js"
-import ServiceError from "./ServiceError.js"
+import ServiceError from "../utils/ServiceError.js"
 
 class AppointmentServices {
 
     async createAppointment(data, patientId) {
         try {
-            const startTimeDate = new Date(data.date)
+            const startTimeDate = new Date(data.date) // transforma string em objeto date
 
-            const diaSemana = startTimeDate.getUTCDay();
-            const horaMinutoStart = startTimeDate.getUTCHours().toString().padStart(2, '0') + ":" +
-                startTimeDate.getUTCMinutes().toString().padStart(2, '0');
+            const weekDay = startTimeDate.getUTCDay(); // pega dia da semana em número
+            const startTime = startTimeDate.getUTCHours().toString().padStart(2, '0') + ":" + startTimeDate.getUTCMinutes().toString().padStart(2, '0'); // pega hora e minuto transformando 7 em 07
 
-            const endTimeDate = new Date(startTimeDate.getTime() + 1 * 60 * 60 * 1000)
-            const horaMinutoEnd = endTimeDate.getUTCHours().toString().padStart(2, '0') + ":" +
-                endTimeDate.getUTCMinutes().toString().padStart(2, '0');
+            const endTimeDate = new Date(startTimeDate.getTime() + 1 * 60 * 60 * 1000) // 1 hora de consulta
+            const endTime = endTimeDate.getUTCHours().toString().padStart(2, '0') + ":" + endTimeDate.getUTCMinutes().toString().padStart(2, '0'); 
 
             const doctor = await User.findById(data.doctor_id)
             if (!doctor) throw new ServiceError('Doctor not found', 404);
             if (doctor.role !== 'doctor') throw new ServiceError('Appointments must be with a doctor', 400)
 
             const isAvailable = doctor.doctor_info?.availability.find(a =>
-                Number(a.week_day) === diaSemana &&
-                horaMinutoStart >= a.start_time &&
-                horaMinutoStart < a.end_time
+                Number(a.week_day) === weekDay && // checa se o médico trabalha no dia da consulta
+                startTime >= a.start_time && // checa se o médico já começou a trabalhar
+                endTime < a.end_time // checa se a consulta termina antes do horário de ir do médico (não condizente com a vida real, mas enfim)
             );
             if (!isAvailable) throw new ServiceError('Doctor does not work at this time/day', 400)
 
             const conflict = await Appointment.findOne({
                 doctor_id: data.doctor_id,
-                "date.start_time": horaMinutoStart
+                "date.start_time": startTime // checa se o horário de início não bate com outra consulta. No front, deve ser garantido que consultas só aconteçam em horários inteiros (de 30 em 30 min) e verificado pra que não marquem uma consulta enquanto outra está acontecendo.
             });
             if (conflict) throw new ServiceError('Time slot already taken', 409)
 
@@ -37,8 +35,8 @@ class AppointmentServices {
                 doctor_id: data.doctor_id,
                 patient_id: patientId,
                 date: {
-                    start_time: horaMinutoStart,
-                    end_time: horaMinutoEnd
+                    start_time: startTime,
+                    end_time: endTime
                 }
             }
 

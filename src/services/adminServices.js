@@ -1,5 +1,5 @@
 import { User } from "../db/schemas/user-schema.js"
-import ServiceError from "./ServiceError.js"
+import ServiceError from "../utils/ServiceError.js"
 
 class AdminServices {
 
