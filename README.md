@@ -31,7 +31,7 @@ Este projeto foi construído seguindo padrões de **Clean Architecture** e **S.O
 
 ### 1. Clonagem e Dependências
 ```bash
-git clone [https://github.com/LucasSpagnoli/clinica-expressjs.git](https://github.com/LucasSpagnoli/clinica-expressjs.git)
+git clone https://github.com/LucasSpagnoli/clinica-expressjs.git
 cd clinica-expressjs
 npm install
 ```
