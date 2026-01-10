@@ -34,3 +34,23 @@ Este projeto foi construído seguindo padrões de **Clean Architecture** e **S.O
 git clone [https://github.com/LucasSpagnoli/clinica-expressjs.git](https://github.com/LucasSpagnoli/clinica-expressjs.git)
 cd clinica-expressjs
 npm install
+```
+
+### 2. Configuração de Ambiente
+Crie um arquivo .env na raiz do projeto com as seguintes chaves:
+```bash
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/clinica
+ACCESS_TOKEN_SECRET=sua_chave_secreta_acesso
+REFRESH_TOKEN_SECRET=sua_chave_secreta_refresh
+```
+
+### 3. Configuração de Ambiente
+Execute o script de semente (seed) para criar o administrador padrão e inicie o servidor:
+```bash
+# Criar admin inicial
+node src/seedAdmin.js
+
+# Rodar em modo de desenvolvimento
+npm run dev
+```
