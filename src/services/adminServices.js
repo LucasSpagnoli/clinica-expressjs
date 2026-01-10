@@ -3,7 +3,7 @@ import ServiceError from "../utils/ServiceError.js"
 
 class AdminServices {
 
-    async getDBDoctors() {
+    async getDoctorsService() {
         try {
             return await User.find({ role: 'doctor' }).select('-password -createdAt -updatedAt -__v')
         } catch (err) {
@@ -11,7 +11,7 @@ class AdminServices {
         }
     }
 
-    async createDBDoctor(data) {
+    async createDoctorService(data) {
         try {
             const doctorData = {
                 ...data,
@@ -23,7 +23,7 @@ class AdminServices {
         }
     }
 
-    async updateDBDoctor(id, data) {
+    async updateDoctorService(id, data) {
         try {
             const updDoc = await User.findByIdAndUpdate(id, data, {
                 new: true,
@@ -37,7 +37,7 @@ class AdminServices {
         }
     }
 
-    async deleteDBDoctor(id) {
+    async deleteDoctorService(id) {
         try {
             const delDoctor = await User.findByIdAndDelete(id)
             if (!delDoctor) throw new ServiceError('Doctor not found', 404)

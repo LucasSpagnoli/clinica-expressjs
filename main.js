@@ -1,8 +1,8 @@
 import express from 'express'
-import { connectDB } from './db/connection.js'
+import { connectDB } from './src/db/connection.js'
 import dotenv from 'dotenv'
-import routes from './routes/routes.js'
-import { errorMiddleware } from './middleware/errorMiddleware.js'
+import routes from './src/routes/routes.js'
+import { errorMiddleware } from './src/middleware/errorMiddleware.js'
 
 dotenv.config()
 const app = express()

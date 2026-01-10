@@ -4,7 +4,7 @@ import ServiceError from "../utils/ServiceError.js"
 
 class AppointmentServices {
 
-    async createAppointment(data, patientId) {
+    async createAppointmentService(data, patientId) {
         try {
             const startTimeDate = new Date(data.date) // transforma string em objeto date
 
@@ -53,7 +53,7 @@ class AppointmentServices {
         }
     }
 
-    async deleteAppointment(id, patientId) {
+    async deleteAppointmentService(id, patientId) {
         try {
             const app = await Appointment.findById(id)
             if (!app) throw new ServiceError('Appointment not found', 404)
@@ -71,7 +71,7 @@ class AppointmentServices {
         }
     }
 
-    async getAppointments(id, role) {
+    async getAppointmentsService(id, role) {
         try {
             if (role === 'patient') {
                 return await Appointment.find({ patient_id: id }).populate('doctor_id', 'name doctor_info.specialty')
