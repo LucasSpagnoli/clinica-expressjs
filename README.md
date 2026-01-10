@@ -1,9 +1,9 @@
-Clinica Express API
+🏥 Clinica Express API
 
 API REST para gerenciamento de clínicas médicas, focada em agendamentos, controle de disponibilidade de médicos e autenticação segura.
 
 
-Melhores Práticas Implementadas
+⭐ Melhores Práticas Implementadas
 
 Este projeto foi construído seguindo padrões de Clean Architecture e S.O.L.I.D., garantindo escalabilidade e facilidade de manutenção:
 
@@ -19,7 +19,7 @@ Security: Autenticação via JWT com sistema de Silent Refresh Tokens (Whitelist
 Validation: Esquemas de validação rigorosos com express-validator e integridade de dados via Regex no Mongoose.
 
 
-Tecnologias e Ferramentas
+⚒️ Tecnologias e Ferramentas
 
 Node.js & Express: Core da aplicação e roteamento.
 
@@ -32,7 +32,7 @@ Bcrypt: Hashing de senhas.
 Express-validator: Validação de entrada de dados.
 
 
-Como Rodar o Projeto
+▶️ Como Rodar o Projeto
 
 Clone o repositório e instale as dependências:
 
