@@ -12,7 +12,7 @@ class AppointmentServices {
             const startTime = startTimeDate.getUTCHours().toString().padStart(2, '0') + ":" + startTimeDate.getUTCMinutes().toString().padStart(2, '0'); // pega hora e minuto transformando 7 em 07
 
             const endTimeDate = new Date(startTimeDate.getTime() + 1 * 60 * 60 * 1000) // 1 hora de consulta
-            const endTime = endTimeDate.getUTCHours().toString().padStart(2, '0') + ":" + endTimeDate.getUTCMinutes().toString().padStart(2, '0'); 
+            const endTime = endTimeDate.getUTCHours().toString().padStart(2, '0') + ":" + endTimeDate.getUTCMinutes().toString().padStart(2, '0');
 
             const doctor = await User.findById(data.doctor_id)
             if (!doctor) throw new ServiceError('Doctor not found', 404);
@@ -49,6 +49,7 @@ class AppointmentServices {
             }
         } catch (err) {
             if (err.status) throw err;
+            console.log(err.message)
             throw new ServiceError('Error creating appointment', 500)
         }
     }

@@ -4,7 +4,7 @@
   "main": "main.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
     "start": "nodemon main.js"
   },
   "keywords": [],
@@ -19,5 +19,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.2",
     "nodemon": "^3.1.11"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.17"
   }
 }
